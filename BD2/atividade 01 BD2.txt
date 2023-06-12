@@ -1,0 +1,115 @@
+//1
+
+SELECT nome,sobrenome 
+FROM pessoas;
+
+//2
+
+SELECT nome, sobrenome 
+FROM pessoas 
+WHERE codPessoa IN(
+
+   SELECT codAluno 
+   FROM alunos
+
+);
+
+//3
+
+SELECT nome,sobrenome 
+FROM pessoas 
+WHERE nome = 'leonildo' AND sobrenome LIKE '%sperandio%' AND codPessoa IN(
+
+   SELECT codAluno 
+   FROM alunos
+
+);
+
+//4
+
+SELECT codLocacao
+FROM locacoes 
+WHERE codAluno IN(
+
+   SELECT codPessoa 
+   FROM pessoas 
+   WHERE nome = 'leonildo' AND sobrenome LIKE '%sperandio%' AND codPessoa IN(
+
+      SELECT codAluno 
+      FROM alunos
+
+ )
+);
+
+//5
+
+SELECT codLivro 
+FROM itenslocacoes 
+WHERE codLocacao IN(
+
+   SELECT codLocacao
+   FROM locacoes 
+   WHERE codAluno IN(
+
+      SELECT codPessoa 
+      FROM pessoas 
+      WHERE nome = 'leonildo' AND sobrenome LIKE '%sperandio%' AND codPessoa IN(
+
+         SELECT codAluno 
+         FROM alunos
+
+   )
+ )
+);
+
+//6
+
+SELECT titulo 
+FROM livros 
+WHERE codLivro IN(
+
+   SELECT codLivro 
+   FROM itenslocacoes 
+   WHERE codLocacao IN(
+
+      SELECT codLocacao
+      FROM locacoes 
+      WHERE codAluno IN(
+
+         SELECT codPessoa 
+         FROM pessoas 
+         WHERE nome = 'leonildo' AND sobrenome LIKE '%sperandio%' AND codPessoa IN(
+
+            SELECT codAluno 
+            FROM alunos
+
+   )
+  )
+ )
+);
+
+//7
+
+SELECT titulo 
+FROM livros 
+WHERE codLivro IN(
+
+   SELECT codLivro 
+   FROM itenslocacoes 
+   WHERE codLocacao IN(
+
+      SELECT codLocacao
+      FROM locacoes 
+      WHERE codAluno IN(
+
+         SELECT codPessoa 
+         FROM pessoas 
+         WHERE nome = 'Aline' AND sobrenome LIKE '%Coutinho%' AND codPessoa IN(
+				
+            SELECT codALuno
+            FROM Alunos
+
+   )
+  )
+ )
+);

@@ -1,0 +1,112 @@
+CREATE OR REPLACE VIEW VWProfessores AS
+SELECT nome, de.nomeDisciplina 'Disciplina', d.nomeDisciplina 'Pré-requisito'
+FROM pessoa p
+JOIN funcionario f
+	ON f.codFuncionario = p.codPessoa
+JOIN professor pr
+	ON f.codFuncionario = pr.codProf
+JOIN turma t
+	ON t.codProf = pr.codProf
+JOIN disciplina d
+	ON t.codDisciplina = d.codDisciplina
+JOIN disciplina de
+	ON de.preRequisito = d.codDisciplina
+ORDER BY de.codDisciplina
+
+SELECT *
+FROM VWProfessores
+WHERE nome = 'anderson'
+
+
+
+
+
+
+CREATE OR REPLACE VIEW VWFaltaAluno AS(
+	SELECT t.codTurma, p.nome nomeAluno, SUM(falta) faltas
+	FROM pessoa p
+	JOIN participacao a
+		ON p.codPessoa = a.codAluno
+	JOIN presenca r
+		ON a.codPart = r.codPart
+	JOIN turma t
+		ON t.codTurma = a.codTurma
+	GROUP BY a.codPart
+)
+
+CREATE OR REPLACE VIEW VWProfessor AS(
+SELECT t.codTurma, nome nomeProfessor
+FROM pessoa p
+JOIN professor pf
+	ON p.codPessoa = pf.codProf
+JOIN turma t
+	ON pf.codProf = t.codProf
+GROUP BY p.codPessoa
+)
+
+SELECT nomeAluno, faltas, nomeProfessor
+FROM VWFaltaAluno f 
+JOIN VWProfessor p
+ON f.codTurma = p.codTurma
+WHERE nomeProfessor LIKE '%maycon%' AND faltas <12
+
+
+
+
+SELECT nome
+FROM pessoa p
+JOIN participacao a
+	ON p.codPessoa = a.codAluno
+JOIN avaliacaopart ap
+	ON a.codPart = ap.codPart
+GROUP BY a.codPart 
+ORDER BY SUM(nota)* 25/100 DESC LIMIT 3
+
+
+SELECT p.nome nomeAluno,nomeDisciplina, SUM(falta) faltas
+FROM pessoa p
+JOIN participacao a
+	ON p.codPessoa = a.codAluno
+JOIN presenca r
+	ON a.codPart = r.codPart
+JOIN turma t
+	ON t.codTurma = a.codTurma
+JOIN disciplina d
+	ON d.codDisciplina = t.codDisciplina
+GROUP BY a.codPart
+
+
+
+CREATE OR REPLACE VIEW VWAprovado AS(
+	SELECT m.codPart
+	FROM VWPorcentFalta f
+	JOIN VWMediaAluno m
+		ON f.codPart = m.codPart
+	WHERE porcentFalta<=25 AND media >=60
+)
+
+
+CREATE VIEW VWCreditoALuno AS(
+	SELECT nome, SUM(credito) totalCredito, nomeCurso
+	FROM participacao p
+	JOIN VWAprovado c
+		ON p.codPart = c.codPart
+	JOIN turma t
+		ON p.codTurma = t.codTurma
+	JOIN disciplina d
+		ON t.codDisciplina = d.codDisciplina
+	JOIN pessoa e
+		ON p.codALuno = e.codPessoa
+	JOIN cursodisciplina cd
+		ON d.codDisciplina = cd.codDisciplina
+	JOIN curso u
+		ON cd.codCurso = u.codCurso
+	GROUP BY codALuno
+)
+
+SELECT *
+FROM VWCreditoAluno
+WHERE nome = 'michelli' AND nomeCurso = 'TADS'
+
+SELECT * FROM VWCreditoALuno
+WHERE totalCredito  >= 10

@@ -1,0 +1,137 @@
+SELECT nome, sobrenome
+FROM pessoas
+
+
+
+SELECT nome, sobrenome
+FROM pessoas p
+JOIN alunos a
+	ON p.codPessoa = a.codAluno
+
+
+
+SELECT codAluno
+FROM pessoas p
+JOIN alunos a
+	ON p.codPessoa = a.codAluno
+WHERE nome = 'leonildo' AND sobrenome LIKE '%Sperandio%'
+
+
+
+SELECT codLocacao
+FROM pessoas p
+JOIN locacoes l
+	ON p.codPessoa = l.codAluno
+WHERE nome = 'leonildo' AND sobrenome LIKE '%Sperandio%'
+
+
+
+SELECT lv.codLivro
+FROM pessoas p
+JOIN locacoes l
+	ON p.codPessoa = l.codAluno
+JOIN itensLocacoes i
+	ON i.codLocacao = l.codLocacao
+JOIN livros lv
+	ON lv.codLivro = i.codLivro
+WHERE nome = 'leonildo' AND sobrenome LIKE '%Sperandio%'
+
+
+
+SELECT titulo
+FROM pessoas p
+JOIN locacoes l
+	ON p.codPessoa = l.codAluno
+JOIN itensLocacoes i
+	ON i.codLocacao = l.codLocacao
+JOIN livros lv
+	ON lv.codLivro = i.codLivro
+WHERE nome = 'leonildo' AND sobrenome LIKE '%Sperandio%'
+
+
+
+SELECT titulo
+FROM pessoas p
+JOIN locacoes l
+	ON p.codPessoa = l.codAluno
+JOIN itensLocacoes i
+	ON i.codLocacao = l.codLocacao
+JOIN livros lv
+	ON lv.codLivro = i.codLivro
+WHERE nome = 'pedro' AND sobrenome LIKE '%Henrique Bastos%'
+
+
+
+SELECT codAutor
+FROM pessoas p
+JOIN autores a
+	ON p.codPessoa = a.codAutor
+WHERE nome = 'Guilherme' AND sobrenome LIKE '%Castelo Branco%'
+
+
+
+SELECT l.codLivro
+FROM pessoas p
+JOIN autoresLivros a
+	ON p.codPessoa = a.codAutor
+JOIN livros l
+	ON l.codLivro = a.codLivro
+WHERE nome = 'Guilherme' AND sobrenome LIKE '%Castelo Branco%'
+
+
+
+
+SELECT a.codAluno, pa.nome, pa.sobrenome, titulo
+FROM pessoas pa
+JOIN alunos a
+	ON a.codAluno = pa.codPessoa
+JOIN locacoes l
+	ON l.codAluno = a.codAluno
+JOIN itensLocacoes i
+	ON i.codLocacao = l.codLocacao
+JOIN livros lv
+	ON lv.codLivro = i.codLivro
+JOIN autoresLivros al
+	ON lv.codLivro = al.codLivro
+JOIN pessoas pe
+	ON al.codAutor = pe.codPessoa
+WHERE pe.nome = 'Guilherme' AND pe.sobrenome LIKE '%Castelo Branco%'
+
+===============================================================================
+===============================================================================
+
+SELECT nome, sobrenome, codLivro
+FROM pessoas p
+JOIN alunos a
+	ON p.codPessoa = a.codAluno
+JOIN locacoes l
+	ON a.codAluno = l.codAluno
+JOIN itenslocacoes i
+	ON l.codLocacao = i.codLocacao
+WHERE codLivro IN(
+	SELECT codLivro
+	FROM pessoas p
+	JOIN autores a
+		ON p.codPessoa = a.codAutor
+	JOIN autoreslivros al
+		ON a.codAutor = al.codAutor
+	WHERE nome LIKE '%Guilherme%' AND sobrenome LIKE '%Castelo Branco%'
+)
+
+
+
+
+SELECT nome, sobrenome, email
+FROM pessoas p
+WHERE email LIKE '%yahoo%'
+
+
+
+SELECT nome, sobrenome
+FROM pessoas p
+WHERE email NOT IN (
+
+	SELECT email
+	FROM pessoas
+	WHERE email LIKE '%gmail%'
+)

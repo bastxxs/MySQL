@@ -1,0 +1,47 @@
+//1
+
+SELECT nome,sobrenome, COUNT(codLocacao)
+FROM pessoas p
+JOIN autoreslivros a
+	ON p.codPessoa = a.codAutor
+JOIN itenslocacoes i
+	ON i.codLivro = a.codLivro
+GROUP BY codAutor
+ORDER BY COUNT(codAutor) DESC LIMIT 1
+
+
+//2
+
+SELECT p.nome, p.sobrenome, pe.nome, pe.sobrenome, ano
+FROM pessoas p
+JOIN locacoes l 
+	ON p.codPessoa = l.codAluno
+JOIN pessoas pe 
+	ON pe.codPessoa = l.codFuncionario
+JOIN itensLocacoes i 
+	ON l.codLocacao = i.codLocacao
+JOIN livros v 
+	ON v.codLivro = i.codLivro
+WHERE ano LIKE '%2008%'
+
+
+//3
+
+SELECT DISTINCT nome
+FROM pessoa p
+JOIN participacao a 
+	ON p.codPessoa = a.codAluno
+JOIN presenca r 
+	ON a.codPart = r.codPart
+GROUP BY a.codPart
+HAVING SUM(falta)/2 > ((COUNT(dataAula)*25)/100)
+
+//4
+
+SELECT pc.nome, pc.sobrenome
+FROM pessoa p
+JOIN funcionario f
+	ON p.codAdm = f.codFuncionario
+JOIN pessoa pc
+	ON f.codChefia = pc.codPessoa
+WHERE p.nome = "Rênisson" AND p.sobrenome = "Rodrigues de Souza"

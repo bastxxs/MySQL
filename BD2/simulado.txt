@@ -1,0 +1,65 @@
+CREATE TABLE professor(
+codProfessor INT UNSIGNED NOT NULL AUTO_INCREMENT,
+nome VARCHAR(100) NOT NULL,
+
+PRIMARY KEY (codProfessor)
+)ENGINE=INNODB;
+
+CREATE TABLE disciplina(
+codDisciplina INT UNSIGNED NOT NULL, 
+nome VARCHAR(100) NOT NULL,
+ementa VARCHAR(5000) NOT NULL,
+preRequisito INT UNSIGNED,
+
+PRIMARY KEY (codDisciplina),
+FOREIGN KEY (preRequisito) REFERENCES disciplina(codDisciplina)  ON DELETE CASCADE
+)ENGINE=INNODB;
+
+CREATE TABLE turma(
+codProfessor INT UNSIGNED NOT NULL,
+codDisciplina INT UNSIGNED NOT NULL,
+dataInicio DATE NOT NULL,
+mediaDaTurma FLOAT,
+
+PRIMARY KEY (codProfessor, codDisciplina, dataInicio),
+FOREIGN KEY (codDisciplina) REFERENCES disciplina(codDisciplina) ON DELETE CASCADE,
+FOREIGN KEY (codProfessor) REFERENCES professor(codProfessor) ON DELETE CASCADE
+)ENGINE=INNODB;
+
+
+//Q2//
+ALTER TABLE professor RENAME docentes;
+
+//Q3//
+DROP TABLE turma;
+
+//Q4//
+DESC disciplina;
+
+//Q5//
+ALTER TABLE disciplina CHANGE ementa conteudoProgramatico VARCHAR(5000);
+
+//Q6//
+ALTER TABLE turma DROP COLUMN mediaDaTurma;
+
+//Q7//
+ALTER TABLE professor ADD codCoordenacao INT NOT NULL;
+
+//Q8//
+SELECT codProfessor, codDisciplina, dataInicio FROM turma;
+
+//Q9//
+INSERT INTO disciplina (nome, conteudoProgramatico, preRequisito) 
+	VALUES ('Programação I',NULL,NULL),
+	('Programação II',NULL,1);
+
+//Q10//
+UPDATE professor SET nome = 'João Miguel'
+WHERE nome = 'J. Miguel';
+
+//Q11//
+DELETE FROM disciplina WHERE nome = 'Sistemas Multimídia';
+
+//Q12//
+DELETE FROM simulado 
+WHERE codigo > 5 AND codigo < 10;

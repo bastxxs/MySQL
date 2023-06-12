@@ -1,0 +1,107 @@
+7º Lista de exercícios
+Visões (Views)
+
+    1. Crie uma visão onde informando a o nome do professor e a visão pode-se consultar o nome das disciplinas que este professor ministrou e suas respectivas disciplinas que são pré-requisito.
+CREATE OR REPLACE VIEW VWProfessores AS
+SELECT nome, de.nomeDisciplina 'Disciplina', d.nomeDisciplina 'Pré-requisito'
+FROM pessoa p
+JOIN funcionario f
+	ON f.codFuncionario = p.codPessoa
+JOIN professor pr
+	ON f.codFuncionario = pr.codProf
+JOIN turma t
+	ON t.codProf = pr.codProf
+JOIN disciplina d
+	ON t.codDisciplina = d.codDisciplina
+JOIN disciplina de
+	ON de.preRequisito = d.codDisciplina
+ORDER BY de.codDisciplina
+
+SELECT *
+FROM VWProfessores
+WHERE nome = 'anderson'
+
+    2. Crie uma visão onde informando o nome do professor e o número de faltas pode-se consultar todos os alunos que tiveram ao menos este número de faltas informado.
+CREATE OR REPLACE VIEW VWFaltaAluno AS(
+	SELECT p.nome nomeAluno, pf.nome nomeProfessor, SUM(falta) faltas
+	FROM pessoa p
+	JOIN participacao a
+		ON p.codPessoa = a.codAluno
+	JOIN presenca r
+		ON a.codPart = r.codPart
+	JOIN turma t
+		ON t.codTurma = a.codTurma
+	JOIN pessoa pf
+	ON pf.codPessoa = t.codProf	
+	GROUP BY a.codAluno, t.codProf
+)
+
+    3. Escreva um comando SQL que consulte o nome dos 3 alunos com a maior média geral.
+
+SELECT nome
+FROM pessoa p
+JOIN participacao a
+	ON p.codPessoa = a.codAluno
+JOIN avaliacaopart ap
+	ON a.codPart = ap.codPart
+GROUP BY a.codPart 
+ORDER BY SUM(nota)* 25/100 DESC LIMIT 3
+
+    4. Escreva um comando SQL que consulte o nome de todos os alunos com suas respectivas faltas em cada disciplina.
+SELECT p.nome nomeAluno,nomeDisciplina, SUM(falta) faltas
+FROM pessoa p
+JOIN participacao a
+	ON p.codPessoa = a.codAluno
+JOIN presenca r
+	ON a.codPart = r.codPart
+JOIN turma t
+	ON t.codTurma = a.codTurma
+JOIN disciplina d
+	ON d.codDisciplina = t.codDisciplina
+GROUP BY a.codPart
+
+    5. Crie uma visão onde informando o nome do aluno e o curso pode-se consultar quantos créditos ele já cumpriu.
+
+CREATE VIEW VWCreditoALuno AS(
+SELECT nome, SUM(credito) totalCredito, nomeCurso
+FROM participacao p
+	JOIN VWAprovado c
+		ON p.codPart = c.codPart
+	JOIN turma t
+		ON p.codTurma = t.codTurma
+	JOIN disciplina d
+		ON t.codDisciplina = d.codDisciplina
+	JOIN pessoa e
+		ON p.codALuno = e.codPessoa
+		JOIN cursodisciplina cd
+		ON d.codDisciplina = cd.codDisciplina
+	JOIN curso u
+		ON cd.codCurso = u.codCurso
+	GROUP BY codALuno
+
+
+    6. Crie uma visão onde informando o número créditos pode-se consultar o nome dos alunos e o curso que ele faz que tem no máximo este crédito informado
+CREATE OR REPLACE VIEW VWAprovado AS(
+	SELECT m.codPart
+	FROM VWPorcentFalta f
+	JOIN VWMediaAluno m
+		ON f.codPart = m.codPart
+	WHERE porcentFalta<=25 AND media >=60
+)
+
+CREATE VIEW VWCreditoALuno AS(
+SELECT nome, SUM(credito) totalCredito, nomeCurso
+FROM participacao p
+	JOIN VWAprovado c
+		ON p.codPart = c.codPart
+	JOIN turma t
+		ON p.codTurma = t.codTurma
+	JOIN disciplina d
+		ON t.codDisciplina = d.codDisciplina
+	JOIN pessoa e
+		ON p.codALuno = e.codPessoa
+		JOIN cursodisciplina cd
+		ON d.codDisciplina = cd.codDisciplina
+	JOIN curso u
+		ON cd.codCurso = u.codCurso
+	GROUP BY codALuno

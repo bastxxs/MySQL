@@ -1,0 +1,64 @@
+//1
+
+SELECT nome,sobrenome 
+FROM pessoas;
+
+//2
+
+SELECT p.nome, p.sobrenome 
+FROM pessoas p
+INNER JOIN alunos a
+ON p.codPessoa = a.codAluno;
+
+//3
+
+SELECT p.nome, p.sobrenome 
+FROM pessoas p
+INNER JOIN alunos a
+ON p.nome = 'leonildo' AND p.sobrenome LIKE '%sperandio%' AND a.codAluno = p.codPessoa;
+
+//4
+
+SELECT l.codLocacao
+FROM locacoes l
+INNER JOIN pessoas p
+ON p.nome = 'leonildo' AND p.sobrenome LIKE '%sperandio%' AND p.codPessoa = l.codAluno;
+
+//5
+
+SELECT i.codLivro 
+FROM itenslocacoes i
+INNER JOIN pessoas p
+ON p.nome = 'leonildo' AND p.sobrenome LIKE '%sperandio%' AND p.codPessoa = i.codLocacao;
+
+//6
+
+
+SELECT l.titulo
+FROM livros l
+INNER JOIN pessoas p
+ON p.nome = 'leonildo' AND p.sobrenome LIKE '%sperandio%' AND p.codPessoa = l.codLivro;
+
+//7
+
+
+SELECT l.titulo
+FROM livros l
+INNER JOIN pessoas p
+ON p.nome = 'aline' AND p.sobrenome LIKE '%coutinho%' AND p.codPessoa = l.codLivro;
+
+//8
+
+SELECT a.codAutor, p.nome, p.sobrenome 
+FROM autores a
+INNER JOIN pessoas p
+ON p.nome = 'guilherme' AND p.sobrenome LIKE '%castelo%' AND p.codPessoa = a.codAutor;
+
+//9
+
+SELECT l.codLivro, p.nome, p.sobrenome 
+FROM livros l
+INNER JOIN pessoas p
+ON p.nome = 'guilherme' AND p.sobrenome LIKE '%castelo%' AND p.codPessoa = l.codLivro;
+
+

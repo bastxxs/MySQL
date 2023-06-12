@@ -1,0 +1,37 @@
+SELECT nome, numero
+FROM professor p
+   JOIN funcionario f
+   ON f.codFuncionario = p.codProf
+      JOIN pessoa pe
+      ON f.codFuncionario = pe.codPessoa
+         JOIN telefone t
+         ON pe.codPessoa = t.codPessoa
+
+SELECT nome
+FROM aluno a
+   JOIN pessoa p
+   ON a.codAluno = p.codPessoa
+      JOIN endereco e
+      ON e.codEndereco = p.codPessoa WHERE cidade = 'Santa Teresa'
+
+
+SELECT nome
+FROM administrativo a
+JOIN pessoa p
+ON a.codAdm = p.codPessoa
+JOIN turma t
+ON p.codPessoa = t.codTurma WHERE ano = 2017 AND semestre = 1
+
+
+SELECT nomeCurso
+FROM curso c
+   JOIN cursoDisciplina cd
+   ON c.codCurso = cd.codCurso
+      JOIN disciplina d
+      ON d.codDisciplina = cd.codDisciplina
+         JOIN turma t
+         ON t.codDisciplina = d.codDisciplina
+            JOIN professor p
+            ON p.codProf = t.codDisciplina
+               JOIN pessoa pe
+               ON p.codProf = pe.codPessoa WHERE nome = 'anderson'

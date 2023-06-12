@@ -1,0 +1,131 @@
+CREATE TABLE Pessoas(
+    codPessoa	INT NOT NULL,
+    nome         VARCHAR(100) NOT NULL,
+    CPF		INT NOT NULL,
+    endereco     VARCHAR(50) NOT NULL,
+    telefone	INT,
+    CONSTRAINT Pessoas_PK PRIMARY KEY (codPessoa)
+)ENGINE=INNODB;
+
+CREATE TABLE Autores(
+    codAutores		INT NOT NULL,
+    numPublicacoes 	INT,
+    pseudonimo 		VARCHAR(30),
+    CONSTRAINT Autores_PK PRIMARY KEY (codAutores),
+    CONSTRAINT Autores_FK foreign key (codAutores) 
+                REFERENCES Pessoas (codPessoa)
+)ENGINE=INNODB;
+
+CREATE TABLE Enderecos(
+    codEndereco		INT NOT NULL,
+    rua 	        VARCHAR(100) NOT NULL,
+    numero 		INT,
+    bairro 		VARCHAR(30) NOT NULL,
+    UF 		        CHAR(2) NOT NULL,
+    CEP                 CHAR(10) NOT NULL,
+    complemento         VARCHAR(100) NOT NULL,
+
+CONSTRAINT Enderecos_PK PRIMARY KEY (codEndereco), 
+)ENGINE=INNODB;
+
+CREATE TABLE Telefones(
+    
+    numero		INT NOT NULL,
+    codPessoa 	        VARCHAR(100) NOT NULL,
+    
+CONSTRAINT Telefones_PK PRIMARY KEY (numero),
+CONSTRAINT Telefones_FK foreign key (numero) 
+                REFERENCES Pessoas (codPessoa) 
+)ENGINE=INNODB;
+
+CREATE TABLE Funcionarios(
+    
+    codFuncionario		INT NOT NULL,
+    dataAdmissao 	        DATE NOT NULL,
+    Cargo                       INT NOT NULL,
+
+CONSTRAINT Funcionarios_PK PRIMARY KEY (codFuncionario),
+CONSTRAINT Funcionarios_FK foreign key (codFuncionario) 
+                REFERENCES Pessoas (codPessoa) 
+)ENGINE=INNODB;
+
+CREATE TABLE Alunos(
+    
+    codAluno		INT NOT NULL,
+    carteiraDeEstudante VARCHAR(50) NOT NULL,
+    
+CONSTRAINT Alunos_PK PRIMARY KEY (codAluno),
+CONSTRAINT Alunos_FK foreign key (codAluno) 
+                REFERENCES Pessoas (codPessoa) 
+)ENGINE=INNODB;
+
+
+CREATE TABLE AutoresLivros(
+    
+    codLivro		INT NOT NULL,
+    codAutor            INT NOT NULL,
+    
+CONSTRAINT AutoresLivros_PK PRIMARY KEY (codLivro),
+CONSTRAINT AutoresLivros_FK foreign key (codLivro) 
+                REFERENCES Autores (codAutor) 
+)ENGINE=INNODB;
+
+
+CREATE TABLE AutoresLivros(
+    
+    codLivro		INT NOT NULL,
+    codAutor            INT NOT NULL,
+    
+CONSTRAINT AutoresLivros_PK PRIMARY KEY (codLivro),
+CONSTRAINT AutoresLivros_FK foreign key (codLivro) 
+                REFERENCES Pessoas (codPessoa) 
+)ENGINE=INNODB;
+
+CREATE TABLE Locacoes(
+    codLocacao	    INT NOT NULL,
+    codFuncionario  INT NOT NULL,
+    codAluno	    INT NOT NULL,
+    dataLocacao     DATE NOT NULL,
+    dataEntrega	    DATE NOT NULL,
+
+    CONSTRAINT Locacoes_PK PRIMARY KEY (codLocacao)
+    CONSTRAINT Locacoes_FK PRIMARY KEY (codLocacao),
+    CONSTRAINT Locacoes_FK foreign key (codLocacao) 
+                REFERENCES Funcionario (codFuncionario),
+                REFERENCES Aluno (codAluno)
+)ENGINE=INNODB;
+
+
+CREATE TABLE Livros(
+
+    codLivros	    INT NOT NULL,
+    codEditora      INT NOT NULL,
+    titulo	    VARCHAR(30) NOT NULL,
+    edicao          INT,
+    ano 	    DATE NOT NULL,
+
+    CONSTRAINT Livros_PK PRIMARY KEY (codLivros)
+    CONSTRAINT Livros_FK PRIMARY KEY (codLivros), 
+                REFERENCES Editora (codEditora)
+)ENGINE=INNODB;
+
+
+CREATE TABLE intensLocacao(
+
+    codLocacao	    INT NOT NULL,
+    codLivros      INT NOT NULL,
+
+    CONSTRAINT itensLocacao_PK PRIMARY KEY (codLocacao)
+    CONSTRAINT itensLocacao_FK PRIMARY KEY (codLocacao), 
+                REFERENCES Livros (codLivros),
+)ENGINE=INNODB;
+
+CREATE TABLE Editoras(
+
+    codEditora      INT NOT NULL,
+    CNPJ	    INT NOT NULL,
+    razaoSocial     VARCHAR(30),
+    codEndereco     VARCHAR(30) NOT NULL,
+
+    CONSTRAINT Editoras_PK PRIMARY KEY (codEditora)
+)ENGINE=INNODB;
